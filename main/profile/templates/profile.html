@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>Ecommerce</title>
+</head>
+<body>
+    <nav class="navbar">
+		<div class="logo"><a href="{{ url_for('home.index') }}">HOME</a></div>
+        <ul class="menu">
+            <li><a href="{{ url_for('home.index') }}">Home</a></li>
+			<li><a href="{{ url_for('auth.login') }}" class="active">{{ user.firstname }} {{ user.lastname }}</a></li>
+			{% if not user or (user and user.seller == false) %}
+				<li><a href="{{ url_for('cart.cart_page') }}"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li>
+			{% endif %}
+        </ul>
+        <div class="btn-menu">
+            <i class="fa fa-bars"></i>
+        </div>
+    </nav>
+
+    <section class="profile-container">
+        <h2>Your Profile</h2>
+
+        <div class="profile-info">
+            <h3>Personal Information</h3>
+			<p><strong>First Name:</strong> {{ user.firstname }}</p>
+            <p><strong>Last Name:</strong> {{ user.lastname }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+			{% if user.seller %}
+				<p><strong>Role:</strong> Seller</p>
+			{% else %}
+				<p><strong>Role:</strong> Buyer</p>
+			{% endif %}
+        </div>
+
+        <div class="profile-address">
+            <h3>Shipping Address</h3>
+            <form method="POST">
+                <div class="input-group">
+                    <label for="address">Address</label>
+					<input type="text" id="address" name="address" value="{{ user.address }}">
+                </div>
+                <div class="input-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" name="city" value="{{ user.city }}">
+                </div>
+                <div class="input-group">
+                    <label for="state">State</label>
+                    <input type="text" id="state" name="state" value="{{ user.country }}">
+                </div>
+                <div class="input-group">
+                    <label for="zip">ZIP Code</label>
+                    <input type="text" id="zip" name="zip" value="{{ user.zipcode }}">
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn btn-profile">Save Address</button>
+					{% if user.seller %}
+						<a href="{{ url_for('product.product_page') }}" class="btn btn-profile">Add a Product</a>
+						<a href="{{ url_for('product.product_list_page') }}" class="btn btn-profile">My Products</a>
+					{% endif %}
+                    <button type="submit" class="btn-red btn-profile" name="btn-logout">Log Out</button>
+                </div>
+            </form>
+        </div>
+    </section>
+    
+
+    <section class="profile-orders">
+        <h3>My orders</h3>
+        <div class="orders-wrapper">
+			{% if orders %}
+				{% for elem in orders %}
+					<div class="wrapped-item">
+						<h2>Order n.{{ elem.id }}</h2>
+						<p>{{ elem.date[6:8] }}/{{ elem.date[4:6] }}/{{ elem.date[0:4] }}</p>
+						<p>{{ elem.items }} items</p>
+						<p>EUR {{ elem.total }}</p>
+						<p class="margin-bottom">{{ elem.status }}</p>
+						{% if user.seller %}
+							<a href="{{ url_for('order.order_page_seller', order_id=elem.id) }}" class="btn">Order details</a>
+						{% else %}
+							<a href="{{ url_for('order.order_page', order_id=elem.id) }}" class="btn">Order details</a>
+						{% endif %}
+					</div>
+				{% endfor %}
+			{% endif %}
+        </div>
+    </section>
+
+</body>
+</html> 
+
