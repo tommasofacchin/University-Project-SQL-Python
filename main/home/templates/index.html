@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Ecommerce</title>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo"><a href="{{ url_for('home.index') }}">HOME</a></div>
+        <ul class="menu">
+            <li><a href="" class="active">Home</a></li>
+            <li><a href="{{ url_for('auth.login') }}">
+                    {% if user %}
+                    {{ user.firstname ~ ' ' ~ user.lastname }}
+                    {% else %}
+                    Account
+                    {% endif %}
+                </a></li>
+			{% if not user or (user and user.seller == false) %}
+				<li><a href="{{ url_for('cart.cart_page') }}"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+			{% endif %}
+            </li>
+        </ul>
+        <div class="btn-menu">
+            <i class="fa fa-bars"></i>
+        </div>
+    </nav>
+
+    <section class="content">
+
+        <div class="search-bar">
+            <form method="POST" class="search-bar-row">
+                <input type="text" placeholder="Search for products" class="searchbar" name="searchbar">
+                <button type="submit" class="btn" name="btn-search">Search</button>
+            </form>
+        </div>
+        <section class="contentbox">
+
+            <div class="sidebar">
+                <h2>Categories</h2>
+				<ul>
+					{% for description, link in categories %}
+						<li><a href="{{ link }}" class="links">{{ description }}</a></li>
+					{% endfor %}
+				</ul>
+            </div>
+
+            <section class="products-section">
+                <h2>Featured Products</h2>
+                <div class="product-list">
+                    {% if products %}
+						{% for product in products %}
+							<div class="product-card">
+								<img src="{{ url_for('product.static', filename=product.imgpath) }}" class="product-image">
+								<h3><a href="{{ url_for('product.product_view_page', product_id=product.id) }}" class="links">{{ product.name }}</a></h3>
+								<p class="product-brand">{{ product.brand }}</p>
+								<p class="product-description">{{ product.description }}</p>
+								<p class="price">EUR {{ product.price }}</p>
+								<p class="qtInCart" data-id="{{ product.id }}"></p>
+								{% if not user or (user and user.seller == false) %}
+									<button type="submit" class="btn-addToCart btn-small" data-id="{{ product.id }}">Add to cart</button>
+								{% endif %}
+							</div>
+						{% endfor %}
+                    {% else %}
+						<div style="height: 100%; margin: 0; display: flex; justify-content: center; align-items: center;">
+							<h3>No products found</h3>
+						</div>
+                    {% endif %}
+                </div>
+            </section>
+        </section>
+    </section>
+
+	<script src="{{ url_for('home.static', filename='addToCart.js') }}"></script>
+
+</body>
+
+</html>

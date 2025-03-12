@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>Ecommerce</title>
+</head>
+<body>
+    <nav class="navbar">
+		<div class="logo"><a href="{{ url_for('home.index') }}">HOME</a></div>
+        <ul class="menu">
+            <li><a href="{{ url_for('home.index') }}">Home</a></li>
+			<li><a href="{{ url_for('auth.login') }}">{{ user.firstname }} {{ user.lastname }}</a></li>
+            <li><a href="{{ url_for('cart.cart_page') }}"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li>
+        </ul>
+        <div class="btn-menu">
+            <i class="fa fa-bars"></i>
+        </div>
+    </nav>
+
+
+    <section class="checkout-page">
+        <div class="checkout-left">
+            <div class="checkout-address">
+                <div class="profile-address">
+                    <h3>Shipping Address</h3>
+                    <form method="POST" id="order-form">
+                        <div class="input-group">
+                            <label for="address">Address</label>
+                            <input type="text" id="address" name="address" value="{{ user.address }}">
+                        </div>
+                        <div class="input-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" name="city" value="{{ user.city }}">
+                        </div>
+                        <div class="input-bottom">
+                            <div class="input-group-bottom">
+                                <label for="state">State</label>
+                                <input type="text" id="state" name="state" value="{{ user.country }}">
+                            </div>
+                            <div class="input-group-bottom">
+                                <label for="zip">ZIP Code</label>
+                                <input type="text" id="zip" name="zip" value="{{ user.zipcode }}">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="checkout-payment"></div>
+                    <h3>Payment method</h3>
+                    <div class="input-group">
+                        <label for="name">Card Holder Name</label>
+                        <input type="text" id="name">
+                    </div>
+                    <div class="input-group">
+                        <label for="number">Card Number</label>
+                        <input type="text" id="number">
+                    </div>
+                    <div class="input-bottom">
+                        <div class="input-group-bottom">
+                            <label for="expiry">Expiry Date (MM/YY)</label>
+                            <input type="text" id="expiry" placeholder="MM/YY" pattern="^(0[1-9]|1[0-2])\/\d{2}$">
+                        </div>
+                        <div class="input-group-bottom">
+                            <label for="CVV">CVV Code</label>
+                            <input type="text" id="CVV" maxlength="3" pattern="^\d{3}$" inputmode="numeric">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="checkout-right">
+            <h2>Order details</h2>
+
+            {% for elem in cart %}
+            <div class="checkout-cart-item" data-price="{{ elem.product.price }}">
+                <img src="{{ url_for('product.static', filename=elem.product.imgpath) }}" class="checkout-cart-image">
+                <div class="checkout-product-details">
+                    <h3>{{ elem.product.name }}</h3>
+                    <p>EUR {{ elem.product.price }}</p>
+                    <label for="quantity">Quantity: {{ elem.quantity }}</label>
+                </div>
+            </div>
+            {% endfor %}
+			<p class="checkout-total">Subtotal <span class="">{{ subtotal }}</span></p>
+			<p class="checkout-total">Shipping fees <span class="">{{ fee }}</span></p>
+			<p class="checkout-total">Total <span class="">{{ total }}</span></p>
+
+            <button class="btn confirm-order">Confirm order</button>
+        </div>
+    </section>
+
+	<script src="{{ url_for('cart.static', filename='confirmButton.js') }}"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>Ecommerce</title>
+</head>
+<body>
+    <nav class="navbar">
+		<div class="logo"><a href="{{ url_for('home.index') }}">HOME</a></div>
+        <ul class="menu">
+            <li><a href="{{ url_for('home.index') }}">Home</a></li>
+			<li><a href="{{ url_for('auth.login') }}">
+					{% if user %}
+						{{ user.firstname ~ ' ' ~ user.lastname }}
+					{% else %}
+						Account
+					{% endif %}
+				</a></li>
+            <li><a href="{{ url_for('cart.cart_page') }}" class="active"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li>
+        </ul>
+        <div class="btn-menu">
+            <i class="fa fa-bars"></i>
+        </div>
+    </nav>
+
+    <section class="cart">
+        <h2>Your Cart</h2>
+        {% for elem in cart %}
+        <div class="cart-item" data-price="{{ elem.product.price }}">
+            <img src="{{ url_for('product.static', filename=elem.product.imgpath) }}" class="cart-image">
+            <div class="product-details">
+                <h3>{{ elem.product.name }}</h3>
+                <p class="description">{{ elem.product.description }}</p>
+                <p class="brand">Brand: {{ elem.product.brand }}</p>
+                <p class="price">EUR <span class="item-price">{{ elem.product.price }}</span></p>
+                <label for="quantity">Quantity:</label>
+                <div class="quantity-controls">
+                    <button class="btn-square decrease" data-id="{{ elem.product.id }}">-</button>
+                    <span class="quantity-display" id="quantity">{{ elem.quantity }}</span>
+                    <button class="btn-square increase" data-id="{{ elem.product.id }}">+</button>
+					<p id="soldOut" data-id="{{ elem.product.id }}"></p>
+                </div>
+            </div>
+            <button class="btn-red remove" data-id="{{ elem.product.id }}">Remove</button>
+        </div>
+        {% endfor %}
+
+        <div class="cart-total">
+            <p>Total: $<span id="total-price">0.00</span></p>
+			<form method="POST">
+				<button type="submit" class="btn">Checkout</button>
+			</form>
+        </div>
+    </section>
+
+
+	<script src="{{ url_for('cart.static', filename='manageProduct.js') }}"></script>
+
+</body>
+</html>
+
