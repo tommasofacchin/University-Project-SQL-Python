@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Ecommerce</title>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo"><a href="{{ url_for('home.index') }}">HOME</a></div>
+        <ul class="menu">
+            <li><a href="{{ url_for('home.index') }}">Home</a></li>
+            <li><a href="{{ url_for('auth.login') }}">{{ user.firstname }} {{ user.lastname }}</a></li>
+			{% if not user or (user and user.seller == false) %}
+				<li><a href="{{ url_for('cart.cart_page') }}"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+			{% endif %}
+            </li>
+        </ul>
+        <div class="btn-menu">
+            <i class="fa fa-bars"></i>
+        </div>
+    </nav>
+
+    <section class="order">
+        <h2>Order n.{{ order.id }}</h2>
+            <section class="order-product">
+                <h2>Products</h2>
+
+                {% for elem in orderDetails %}
+                <div class="cart-item">
+                    <img src="{{ url_for('product.static', filename=elem.product.imgpath) }}" class="cart-image">
+                    <div class="product-details">
+                        <h3>{{ elem.product.name }}</h3>
+                        <p class="description">{{ elem.product.descriptio }}</p>
+                        <p class="brand">Brand: {{ elem.product.brand }}</p>
+                        <p class="price">EUR <span class="item-price">{{ elem.product.price }}</span></p>
+                        <label for="quantity">Quantity:</label>
+                        <div class="quantity-controls">
+                            <span class="quantity-display" id="quantity">{{ elem.quantity }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="cart-total">
+                    <p>Total EUR <span id="total-price">{{ order.total }}</span></p>
+                </div>
+            </section>
+
+
+            <div class="order-shipping-info">
+                <h3>Shipping address</h3>
+                <p><strong>Address: </strong>{{ order.address }}</p>
+                <p><strong>City: </strong>{{ order.city }}</p>
+                <p><strong>State: </strong>{{ order.country }}</p>
+                <p><strong>ZIP Code: </strong>{{ order.zipcode }}</p>
+            </div>
+
+            {% if user.seller %}
+				<div class="order-shipping-info">
+					<h3>Buyer</h3>
+					<p><strong>Firstname: </strong>{{ order.firstname }}</p>
+					<p><strong>Lastname: </strong>{{ order.lastname }}</p>
+					<p><strong>Email: </strong>{{ order.email }}</p>
+                </div>           
+				<form method="POST">
+					<div class="order-status-seller">
+						<div class="combobox">
+							<label>Order status:</label>
+							<select name="status_id">
+								{% for elem in statuses %}
+									<option value="{{ elem.id }}" {% if elem.description == order.status %}selected{% endif %}>
+										{{ elem.description }}
+									</option>
+								{% endfor %}
+							</select>
+						</div>
+						<button type="submit" class="btn" id="save-status">Save</button>
+					</div>           
+				</form>
+            {% endif %}
+
+    </section>  
+</body>
+
+</html>
