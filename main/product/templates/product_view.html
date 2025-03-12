@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>Ecommerce</title>
+</head>
+<body>
+    <nav class="navbar">
+		<div class="logo"><a href="{{ url_for('home.index') }}">HOME</a></div>
+        <ul class="menu">
+            <li><a href="{{ url_for('home.index') }}">Home</a></li>
+			<li><a href="{{ url_for('auth.login') }}">{{ user.firstname }} {{ user.lastname }}</a></li>
+            <li><a href="{{ url_for('cart.cart_page') }}" class="active"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li>
+        </ul>
+        <div class="btn-menu">
+            <i class="fa fa-bars"></i>
+        </div>
+    </nav>
+
+
+
+    <section class="product-container">
+        <h2>Product Details</h2>
+        
+        <div class="input-group">
+            <label>Image</label>
+            <div class="product-image">
+				<img src="{{ url_for('product.static', filename=product.imgpath) }}" class="product-image">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Product Name</label>
+			<p>{{ product.name }}</p>
+        </div>
+
+        <div class="input-group">
+            <label>Description</label>
+            <p>{{ product.description }}</p>
+        </div>
+
+        <div class="input-group">
+            <label>Brand</label>
+            <p>{{ product.brand }}</p>
+        </div>
+
+        <div class="input-group">
+            <label>Category</label>
+            <p>{{ product.category.description }}</p>
+        </div>
+
+        <div class="input-group-number">
+            <label>Price</label>
+            <p>${{ product.price }}</p>
+        </div>
+
+        <div class="input-group-number">
+            <label>Availability</label>
+			<p>{{ product.availability }}</p>
+        </div>
+    </section>
+
+</body>
+</html>
+

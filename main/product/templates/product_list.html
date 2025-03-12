@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>Ecommerce</title>
+</head>
+<body>
+    <nav class="navbar">
+		<div class="logo"><a href="{{ url_for('home.index') }}">HOME</a></div>
+        <ul class="menu">
+            <li><a href="{{ url_for('home.index') }}">Home</a></li>
+			<li><a href="{{ url_for('auth.login') }}">{{ user.firstname }} {{ user.lastname }}</a></li>
+        </ul>
+        <div class="btn-menu">
+            <i class="fa fa-bars"></i>
+        </div>
+    </nav>
+
+
+
+    <section class="product-list-container">
+        <h2>My products</h2>
+
+        
+        {% for elem in products %}
+                <div class="product-item">
+                    <img src="{{ url_for('product.static', filename=elem.imgpath) }}" class="cart-image">
+                    <div class="product-details product-details-shorter">
+                        <h3>{{ elem.name }}</h3>
+                        <p class="description">{{ elem.descriptio }}</p>
+                        <p class="brand">Brand: {{ elem.brand }}</p>
+                        <p class="price">EUR <span class="item-price">{{ elem.price }}</span></p>
+                        <label for="quantity">availability:</label>
+                        <div class="quantity-controls">
+                            <span class="quantity-display" id="quantity">{{ elem.availability }}</span>
+                        </div>
+                    </div>
+                    <a href="{{ url_for('product.product_page', product_id=elem.id) }}" class="btn btn-product">Edit product</a>
+                </div>
+        {% endfor %}
+
+        <a href="{{ url_for('product.product_page') }}" class="btn btn-profile">Add a Product</a>
+
+    </section>
+
+</body>
+</html>
+

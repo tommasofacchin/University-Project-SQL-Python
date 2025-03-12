@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>Ecommerce</title>
+</head>
+<body>
+    <nav class="navbar">
+		<div class="logo"><a href="{{ url_for('home.index') }}">HOME</a></div>
+        <ul class="menu">
+            <li><a href="{{ url_for('home.index') }}">Home</a></li>
+			<li><a href="{{ url_for('auth.login') }}">{{ user.firstname }} {{ user.lastname }}</a></li>
+        </ul>
+        <div class="btn-menu">
+            <i class="fa fa-bars"></i>
+        </div>
+    </nav>
+
+
+
+    <section class="product-container">
+		{% if product is none %}
+			<h2>Add new product</h2>
+		{% else %}
+			<h2>Edit product</h2>
+		{% endif %}
+        <form method="POST" enctype="multipart/form-data">
+			{% if product is defined and product is not none %}
+				<div class="input-group">
+					<label for="product-image">Image</label>
+					<input type="file" id="product-image" name="product_image">
+				</div>
+
+				<div class="input-group">
+					<label for="product-name">Product Name</label>
+					<input type="text" id="product-name" name="product_name" value="{{ product.name }}" placeholder="Enter product name" required>
+				</div>
+
+				<div class="input-group">
+					<label for="product-description">Description</label>
+					<textarea id="product-description" name="product_description" placeholder="Enter product description" rows="4" required>{{ product.description }}</textarea>
+				</div>
+
+				<div class="input-group">
+					<label for="product-brand">Brand</label>
+					<input type="text" id="product-brand" name="product_brand" value="{{ product.brand }}" placeholder="Enter brand name" required>
+				</div>
+
+				<div class="input-group">
+					<label for="product-category">Category</label>
+					<select id="product-category" name="product_category" required>
+						<option value="" disabled selected>Select category</option>
+						{% for elem in categories %}
+							<option value="{{ elem.id }}" {% if elem.id == product.fk_category %}selected{% endif %}>{{ elem.description }}</option>
+						{% endfor %}
+					</select>
+				</div>
+
+				<div class="input-group-number">
+					<label for="product-price">Price</label>
+					<input type="text" id="product-price" name="product_price" value="{{ product.price }}" required>
+				</div>
+
+				<div class="input-group-number">
+					<label for="product-availability">Availability</label>
+					<input type="text" id="product-availability" name="product_availability" value="{{ product.availability}}" required>
+				</div>
+			{% else %}
+				<div class="input-group">
+					<label for="product-image">Image</label>
+					<input type="file" id="product-image" name="product_image" required>
+				</div>
+
+				<div class="input-group">
+					<label for="product-name">Product Name</label>
+					<input type="text" id="product-name" name="product_name" placeholder="Enter product name" required>
+				</div>
+
+				<div class="input-group">
+					<label for="product-description">Description</label>
+					<textarea id="product-description" name="product_description" placeholder="Enter product description" rows="4" required></textarea>
+				</div>
+
+				<div class="input-group">
+					<label for="product-brand">Brand</label>
+					<input type="text" id="product-brand" name="product_brand" placeholder="Enter brand name" required>
+				</div>
+
+				<div class="input-group">
+					<label for="product-category">Category</label>
+					<select id="product-category" name="product_category" required>
+						<option value="" disabled selected>Select category</option>
+						{% for elem in categories %}
+							<option value="{{ elem.id }}">{{ elem.description }}</option>
+						{% endfor %}
+					</select>
+				</div>
+
+				<div class="input-group-number">
+					<label for="product-price">Price</label>
+					<input type="text" id="product-price" name="product_price" required>
+				</div>
+
+				<div class="input-group-number">
+					<label for="product-availability">Availability</label>
+					<input type="text" id="product-availability" name="product_availability" required>
+				</div>
+			{% endif %}
+
+			{% if error %}
+				<p style="color: red; text-align: center">{{ error }}</p>
+			{% endif %}
+
+			<button type="submit" class="btn">{% if product is not none %}Save{% else %}Add Product{% endif %}</button>
+        </form>
+    </section>
+
+</body>
+</html>
+
